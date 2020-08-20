@@ -43,6 +43,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   VideoPlayerController videoController;
   VoidCallback videoPlayerListener;
   bool enableAudio = true;
+  FocusMode focusMode = FocusMode.continuousAutoFocusPhoto;
 
   @override
   void initState() {
@@ -103,6 +104,10 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           ),
           _captureControlRowWidget(),
           _toggleAudioWidget(),
+          Align(
+            child: _changeFocusModeWidget(),
+            alignment: Alignment.centerLeft,
+          ),
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(
@@ -154,6 +159,36 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
             },
           ),
         ],
+      ),
+    );
+  }
+
+  /// Change FocusMode
+  Widget _changeFocusModeWidget() {
+    var modes = controller?.description?.focusModes ?? [];
+    if (modes.isEmpty == true) return SizedBox();
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 8),
+      child: DropdownButtonFormField<FocusMode>(
+        value: focusMode,
+        decoration: InputDecoration(labelText: "Focus Mode"),
+        items: modes
+            .map(
+              (it) => DropdownMenuItem<FocusMode>(
+                value: it,
+                child: Text(
+                  "$it".replaceFirst("FocusMode.", ""),
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: (value) {
+          focusMode = value;
+          if (controller != null) {
+            onNewCameraSelected(controller.description);
+          }
+        },
       ),
     );
   }
@@ -279,11 +314,13 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     if (controller != null) {
       await controller.dispose();
     }
-    controller = CameraController(
-      cameraDescription,
-      ResolutionPreset.medium,
-      enableAudio: enableAudio,
-    );
+
+    if (!cameraDescription.focusModes.contains(focusMode)) {
+      focusMode = FocusMode.off;
+    }
+
+    controller = CameraController(cameraDescription, ResolutionPreset.medium,
+        enableAudio: enableAudio, focusMode: focusMode);
 
     // If the controller is updated then update the UI.
     controller.addListener(() {
@@ -477,7 +514,6 @@ class CameraApp extends StatelessWidget {
 List<CameraDescription> cameras = [];
 
 Future<void> main() async {
-  // Fetch the available cameras before initializing the app.
   try {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
