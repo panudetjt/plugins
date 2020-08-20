@@ -1,3 +1,7 @@
+## 0.5.8+6
+
+* Adds ability to change the autofocus mode of the camera
+
 ## 0.5.8+5
 
 * Fix compilation/availability issues on iOS.
@@ -22,7 +26,6 @@
 
 * Remove Android dependencies fallback.
 * Require Flutter SDK 1.12.13+hotfix.5 or greater.
-* Adds ability to change the autofocus mode of the camera
 
 ## 0.5.7+5
 
