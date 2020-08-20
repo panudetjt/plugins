@@ -136,9 +136,17 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       );
     } else {
       return AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
-        child: CameraPreview(controller),
-      );
+          aspectRatio: controller.value.aspectRatio,
+          child: GestureDetector(
+              child: CameraPreview(controller),
+              onTapUp: (TapUpDetails details) {
+                final RenderBox box = context.findRenderObject();
+                final Offset localPoint =
+                    box.globalToLocal(details.globalPosition);
+                final Offset scaledPoint =
+                    localPoint.scale(1 / box.size.width, 1 / box.size.height);
+                controller.setPointOfInterest(scaledPoint);
+              }));
     }
   }
 
