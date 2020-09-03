@@ -542,137 +542,137 @@ public class Camera {
   }
 
   public void setPointOfInterest(@NonNull final double offsetX, @NonNull final double offsetY, @NonNull final Result result) {
-    CameraCaptureSession.CaptureCallback captureCallbackHandler = new CameraCaptureSession.CaptureCallback() {
-            @Override
-            public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-              super.onCaptureCompleted(session, request, result);
+    // CameraCaptureSession.CaptureCallback captureCallbackHandler = new CameraCaptureSession.CaptureCallback() {
+    //         @Override
+    //         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+    //           super.onCaptureCompleted(session, request, result);
               
 
-              if (request.getTag() == "FOCUS_TAG") {
-                //the focus trigger is complete -
-                //resume repeating (preview surface will get frames), clear AF trigger
-                try {
-                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_IDLE);
-                  captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
-                  // captureRequestBuilder.set(
-                  // CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                  cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
-                  Log.d("Camera", "SetRepeatingRequest");
-                } catch (CameraAccessException e) {
-                  //  Log.e("Camera", "Manual AF failure: " + failure);
-                }
-              }
-            }
+    //           if (request.getTag() == "FOCUS_TAG") {
+    //             //the focus trigger is complete -
+    //             //resume repeating (preview surface will get frames), clear AF trigger
+    //             try {
+    //               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_IDLE);
+    //               captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, null);
+    //               // captureRequestBuilder.set(
+    //               // CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+    //               cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
+    //               Log.d("Camera", "SetRepeatingRequest");
+    //             } catch (CameraAccessException e) {
+    //               //  Log.e("Camera", "Manual AF failure: " + failure);
+    //             }
+    //           }
+    //         }
 
-            @Override
-            public void onCaptureFailed(CameraCaptureSession session, CaptureRequest request, CaptureFailure failure) {
-              super.onCaptureFailed(session, request, failure);
-              Log.e("Camera", "Manual AF failure: " + failure);
-            }
-        };
+    //         @Override
+    //         public void onCaptureFailed(CameraCaptureSession session, CaptureRequest request, CaptureFailure failure) {
+    //           super.onCaptureFailed(session, request, failure);
+    //           Log.e("Camera", "Manual AF failure: " + failure);
+    //         }
+    //     };
 
-    try {
-      CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraName);
+    // try {
+    //   CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraName);
 
-      final Rect sensorArraySize = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+    //   final Rect sensorArraySize = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
 
-      // final float[] distortionMode = characteristics.get(CameraCharacteristics.DISTORTION_CORRECTION_AVAILABLE_MODES);
+    //   // final float[] distortionMode = characteristics.get(CameraCharacteristics.DISTORTION_CORRECTION_AVAILABLE_MODES);
       
-      final Rect sensorPreCorrectionArraySize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PRE_CORRECTION_ACTIVE_ARRAY_SIZE);
+    //   final Rect sensorPreCorrectionArraySize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PRE_CORRECTION_ACTIVE_ARRAY_SIZE);
 
 
-      // Log.d("distortion mode", String.valueOf(distortionMode));
+    //   // Log.d("distortion mode", String.valueOf(distortionMode));
 
-      // Log.e("SensorArraySize height", String.valueOf(sensorArraySize.height()));
-      // Log.e("SensorArraySize width", String.valueOf(sensorArraySize.width()));
+    //   // Log.e("SensorArraySize height", String.valueOf(sensorArraySize.height()));
+    //   // Log.e("SensorArraySize width", String.valueOf(sensorArraySize.width()));
     
-      final int centerX = sensorArraySize.centerX();
-      final int centerY = sensorArraySize.centerY();
+    //   final int centerX = sensorArraySize.centerX();
+    //   final int centerY = sensorArraySize.centerY();
 
-      final int halfTouchLength = 10;
+    //   final int halfTouchLength = 10;
 
-      // Log.e("offset x", String.valueOf(offsetX));
-      // Log.e("offset y", String.valueOf(offsetY));
-      // Log.e("center x", String.valueOf(centerX));
-      // Log.e("center y", String.valueOf(centerY));
-
-
-
-      Log.e("view x", String.valueOf(previewSize.getWidth()));
-      Log.e("view Y", String.valueOf(previewSize.getHeight()));
-      Log.e("sensorArraySize width", String.valueOf(sensorArraySize.width()));
-      Log.e("sensorArraySize height", String.valueOf(sensorArraySize.height()));
-
-      Log.e("sensorPreCorrectionArraySize width", String.valueOf(sensorPreCorrectionArraySize.width()));
-      Log.e("sensorPreCorrectionArraySize height", String.valueOf(sensorPreCorrectionArraySize.height()));
-
-      final int pointX = (int)(offsetX * (sensorArraySize.width() - 1 - halfTouchLength));
-      final int pointY = (int)(offsetY * (sensorArraySize.height() - 1 - halfTouchLength));
-
-      final int maxRegionsAF = characteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF);
-
-      Log.e("Max regions af", String.valueOf(maxRegionsAF));
-
-      // final int pointX = (int)(offsetX * (MeteringRectangle.METERING_WEIGHT_MAX - 1));
-      // final int pointY = (int)(offsetY * (MeteringRectangle.METERING_WEIGHT_MAX - 1));
-
-      // final int y = (int)((motionEvent.getX() / (float)view.getWidth())  * (float)sensorArraySize.height());
-      // final int x = (int)((motionEvent.getY() / (float)view.getHeight()) * (float)sensorArraySize.width());
-
-      // final int pointX = (int)((offsetX * previewSize.getWidth()) / sensorArraySize.width());
-      // final int pointY = (int)((offsetY * previewSize.getHeight()) / sensorArraySize.height());
-
-      Log.e("pointX", String.valueOf(pointX));
-      Log.e("pointY", String.valueOf(pointY));
-
-      final MeteringRectangle focusArea = new MeteringRectangle(
-        Math.max(pointX, 0),
-        Math.max(pointY, 0),
-        halfTouchLength * 2,
-        halfTouchLength * 2,
-        MeteringRectangle.METERING_WEIGHT_MAX - 1);
-        // MeteringRectangle.METERING_WEIGHT_DONT_CARE);
-
-      // final Rect touchRect = new Rect(
-      //       (int) pointX,
-      //       (int) pointY,
-      //       (int) pointX + halfTouchLength,
-      //       (int) pointX + halfTouchLength );
-
-      // final MeteringRectangle focusArea = new MeteringRectangle(
-      //   touchRect,
-      //   MeteringRectangle.METERING_WEIGHT_DONT_CARE);
+    //   // Log.e("offset x", String.valueOf(offsetX));
+    //   // Log.e("offset y", String.valueOf(offsetY));
+    //   // Log.e("center x", String.valueOf(centerX));
+    //   // Log.e("center y", String.valueOf(centerY));
 
 
-      //first stop the existing repeating request
-      cameraCaptureSession.stopRepeating();
 
-      //cancel any existing AF trigger (repeated touches, etc.)
-      captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-      captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
-      cameraCaptureSession.capture(captureRequestBuilder.build(), null, null);
+    //   Log.e("view x", String.valueOf(previewSize.getWidth()));
+    //   Log.e("view Y", String.valueOf(previewSize.getHeight()));
+    //   Log.e("sensorArraySize width", String.valueOf(sensorArraySize.width()));
+    //   Log.e("sensorArraySize height", String.valueOf(sensorArraySize.height()));
 
-      captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-      captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
-      captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, new MeteringRectangle[]{focusArea});
-      captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+    //   Log.e("sensorPreCorrectionArraySize width", String.valueOf(sensorPreCorrectionArraySize.width()));
+    //   Log.e("sensorPreCorrectionArraySize height", String.valueOf(sensorPreCorrectionArraySize.height()));
 
-      // captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+    //   final int pointX = (int)(offsetX * (sensorArraySize.width() - 1 - halfTouchLength));
+    //   final int pointY = (int)(offsetY * (sensorArraySize.height() - 1 - halfTouchLength));
 
-      captureRequestBuilder.setTag("FOCUS_TAG");
+    //   final int maxRegionsAF = characteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF);
 
-      // cameraCaptureSession.setRepeatingRequest(
-      //     captureRequestBuilder.build(),
-      //     null,
-      //     null);
-      cameraCaptureSession.capture(
-          captureRequestBuilder.build(),
-          captureCallbackHandler,
-          null);
+    //   Log.e("Max regions af", String.valueOf(maxRegionsAF));
 
-      result.success(null);
-    } catch (CameraAccessException e) {
-      result.error("cameraAccess", e.getMessage(), null);
-    }
+    //   // final int pointX = (int)(offsetX * (MeteringRectangle.METERING_WEIGHT_MAX - 1));
+    //   // final int pointY = (int)(offsetY * (MeteringRectangle.METERING_WEIGHT_MAX - 1));
+
+    //   // final int y = (int)((motionEvent.getX() / (float)view.getWidth())  * (float)sensorArraySize.height());
+    //   // final int x = (int)((motionEvent.getY() / (float)view.getHeight()) * (float)sensorArraySize.width());
+
+    //   // final int pointX = (int)((offsetX * previewSize.getWidth()) / sensorArraySize.width());
+    //   // final int pointY = (int)((offsetY * previewSize.getHeight()) / sensorArraySize.height());
+
+    //   Log.e("pointX", String.valueOf(pointX));
+    //   Log.e("pointY", String.valueOf(pointY));
+
+    //   final MeteringRectangle focusArea = new MeteringRectangle(
+    //     Math.max(pointX, 0),
+    //     Math.max(pointY, 0),
+    //     halfTouchLength * 2,
+    //     halfTouchLength * 2,
+    //     MeteringRectangle.METERING_WEIGHT_MAX - 1);
+    //     // MeteringRectangle.METERING_WEIGHT_DONT_CARE);
+
+    //   // final Rect touchRect = new Rect(
+    //   //       (int) pointX,
+    //   //       (int) pointY,
+    //   //       (int) pointX + halfTouchLength,
+    //   //       (int) pointX + halfTouchLength );
+
+    //   // final MeteringRectangle focusArea = new MeteringRectangle(
+    //   //   touchRect,
+    //   //   MeteringRectangle.METERING_WEIGHT_DONT_CARE);
+
+
+    //   //first stop the existing repeating request
+    //   cameraCaptureSession.stopRepeating();
+
+    //   //cancel any existing AF trigger (repeated touches, etc.)
+    //   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
+    //   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+    //   cameraCaptureSession.capture(captureRequestBuilder.build(), null, null);
+
+    //   captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+    //   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
+    //   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, new MeteringRectangle[]{focusArea});
+    //   captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+
+    //   // captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+
+    //   captureRequestBuilder.setTag("FOCUS_TAG");
+
+    //   // cameraCaptureSession.setRepeatingRequest(
+    //   //     captureRequestBuilder.build(),
+    //   //     null,
+    //   //     null);
+    //   cameraCaptureSession.capture(
+    //       captureRequestBuilder.build(),
+    //       captureCallbackHandler,
+    //       null);
+
+    //   result.success(null);
+    // } catch (CameraAccessException e) {
+    //   result.error("cameraAccess", e.getMessage(), null);
+    // }
   }
 }

@@ -894,42 +894,43 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
         discoverySessionWithDeviceTypes:@[ AVCaptureDeviceTypeBuiltInWideAngleCamera ]
                               mediaType:AVMediaTypeVideo
                                position:AVCaptureDevicePositionUnspecified];
-    NSArray<AVCaptureDevice *> *devices = discoverySession.devices;
-    NSMutableArray<NSDictionary<NSString *, NSObject *> *> *reply =
-        [[NSMutableArray alloc] initWithCapacity:devices.count];
+        NSArray<AVCaptureDevice *> *devices = discoverySession.devices;
+        NSMutableArray<NSDictionary<NSString *, NSObject *> *> *reply =
+            [[NSMutableArray alloc] initWithCapacity:devices.count];
 
-    for (AVCaptureDevice *device in devices) {
-      NSString *lensFacing;
-      switch ([device position]) {
-        case AVCaptureDevicePositionBack:
-          lensFacing = @"back";
-          break;
-        case AVCaptureDevicePositionFront:
-          lensFacing = @"front";
-          break;
-        case AVCaptureDevicePositionUnspecified:
-          lensFacing = @"external";
-          break;
-      }
+      for (AVCaptureDevice *device in devices) {
+          NSString *lensFacing;
+          switch ([device position]) {
+            case AVCaptureDevicePositionBack:
+              lensFacing = @"back";
+              break;
+            case AVCaptureDevicePositionFront:
+              lensFacing = @"front";
+              break;
+            case AVCaptureDevicePositionUnspecified:
+              lensFacing = @"external";
+              break;
+          }
 
-      NSMutableArray<NSString *> *supportedFocusModes = [[NSMutableArray alloc] init];
-      if ([device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
-        [supportedFocusModes addObject:serializeFocusMode(autoFocus)];
-      }
-      if ([device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
-        [supportedFocusModes addObject:serializeFocusMode(continuousAutoFocusPhoto)];
-        [supportedFocusModes addObject:serializeFocusMode(continuousAutoFocusVideo)];
-      }
-      if ([device isFocusModeSupported:AVCaptureFocusModeLocked]) {
-        [supportedFocusModes addObject:serializeFocusMode(off)];
-      }
+          NSMutableArray<NSString *> *supportedFocusModes = [[NSMutableArray alloc] init];
+          if ([device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+            [supportedFocusModes addObject:serializeFocusMode(autoFocus)];
+          }
+          if ([device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+            [supportedFocusModes addObject:serializeFocusMode(continuousAutoFocusPhoto)];
+            [supportedFocusModes addObject:serializeFocusMode(continuousAutoFocusVideo)];
+          }
+          if ([device isFocusModeSupported:AVCaptureFocusModeLocked]) {
+            [supportedFocusModes addObject:serializeFocusMode(off)];
+          }
 
-      [reply addObject:@{
-        @"name" : [device uniqueID],
-        @"lensFacing" : lensFacing,
-        @"focusModes" : supportedFocusModes,
-        @"sensorOrientation" : @90,
-      }];
+          [reply addObject:@{
+            @"name" : [device uniqueID],
+            @"lensFacing" : lensFacing,
+            @"focusModes" : supportedFocusModes,
+            @"sensorOrientation" : @90,
+          }];
+        }
       result(reply);
     } else {
       result(FlutterMethodNotImplemented);
@@ -993,7 +994,7 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
     NSError *error = nil;
     [_camera.captureDevice lockForConfiguration:&error];
     if (error) {
-      result([error flutterError]);
+      result(getFlutterError(error));
     } else {
       if ([_camera.captureDevice isFocusPointOfInterestSupported]) {
         _camera.captureDevice.focusPointOfInterest =
