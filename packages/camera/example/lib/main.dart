@@ -145,7 +145,9 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                     box.globalToLocal(details.globalPosition);
                 final Offset scaledPoint =
                     localPoint.scale(1 / box.size.width, 1 / box.size.height);
-                    print(scaledPoint);
+                print(scaledPoint);
+                print(localPoint);
+                print(box.size.height);
                 controller.setPointOfInterest(scaledPoint);
               }));
     }

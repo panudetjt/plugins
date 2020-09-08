@@ -313,7 +313,7 @@ class CameraController extends ValueNotifier<CameraValue> {
     this.description,
     this.resolutionPreset, {
     this.enableAudio = true,
-    this.focusMode = FocusMode.continuousAutoFocusPhoto,
+    this.focusMode = FocusMode.off,
   }) : super(const CameraValue.uninitialized());
 
   final CameraDescription description;
