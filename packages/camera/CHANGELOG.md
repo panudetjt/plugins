@@ -1,6 +1,14 @@
-## 0.5.8+6
+## 0.5.8+8
 
 * Adds ability to change the autofocus mode of the camera
+
+## 0.5.8+7
+
+* Keep handling deprecated Android v1 classes for backward compatibility.
+
+## 0.5.8+6
+
+* Avoiding uses or overrides a deprecated API in CameraPlugin.java.
 
 ## 0.5.8+5
 
