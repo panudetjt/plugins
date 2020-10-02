@@ -1,6 +1,7 @@
 ## 0.5.8+8
 
 * Adds ability to change the autofocus mode of the camera
+* Fix issue [#19595](https://github.com/flutter/flutter/issues/19595)
 
 ## 0.5.8+7
 
