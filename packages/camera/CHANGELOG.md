@@ -1,7 +1,24 @@
-## 0.5.8+8
+## 0.5.8+12
 
 * Adds ability to change the autofocus mode of the camera
 * Fix issue [#19595](https://github.com/flutter/flutter/issues/19595)
+
+## 0.5.8+11
+
+* Fix rare nullptr exception on Android.
+* Updated README.md with information about handling App lifecycle changes.
+
+## 0.5.8+10
+
+* Suppress the `deprecated_member_use` warning in the example app for `ScaffoldMessenger.showSnackBar`.
+
+## 0.5.8+9
+
+* Update android compileSdkVersion to 29.
+
+## 0.5.8+8
+
+* Fixed garbled audio (in video) by setting audio encoding bitrate.
 
 ## 0.5.8+7
 

@@ -1,3 +1,23 @@
+## 1.0.5
+
+* Fix example in the readme.
+
+## 1.0.4
+
+* Suppress the `deprecated_member_use` warning in the example app for `ScaffoldMessenger.showSnackBar`.
+
+## 1.0.3
+
+* Update android compileSdkVersion to 29.
+
+## 1.0.2
+
+* Android Code Inspection and Clean up.
+
+## 1.0.1
+
+* Add documentation for `WebViewPlatformCreatedCallback`.
+
 ## 1.0.0 - Out of developer preview 🎉.
 
 * Bumped the minimal Flutter SDK to 1.22 where platform views are out of developer preview, and
