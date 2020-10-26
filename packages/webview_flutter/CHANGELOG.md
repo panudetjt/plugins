@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Add pinch to zoom to android to make behavior like ios.
+
 ## 1.0.5
 
 * Fix example in the readme.
